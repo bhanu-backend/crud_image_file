@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from .models import AppUser
 from django.http import HttpResponseRedirect
-
+import os
 def home(request):
     if request.method == "POST":
          print(request.POST)
@@ -12,10 +12,16 @@ def home(request):
          image = request.FILES.get('image')
          instance = AppUser(name=name,email=email ,image = image,category = category)
          instance.save()
-         return redirect('home')
+         return HttpResponseRedirect('/')
+    users = AppUser.objects.all()
+    return render(request,'app1/index.html',{'users':users})
 
 
-
-
-
-    return render(request,'app1/index.html')
+def update_pic(request , id):
+      user =  AppUser.objects.get(pk = id)
+      if os.path.isfile(user.image.path):
+                os.remove(user.image.path)
+      image = request.FILES.get('image')
+      user.image = image
+      user.save()
+      return HttpResponseRedirect('/')

@@ -89,5 +89,47 @@
   </form>
 </div>
 
+<div>
+  {% if users %}
+
+  <table>
+
+    <tr>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Category</th>
+    <th>Image</th>
+    <th>Update</th>
+    </tr>
+
+   {% for user in users %}
+   <tr>
+     <td>{{user.name}}</td>
+     <td>{{user.email}}</td>
+     <td>{{user.category}}</td>
+     <td><img src="{{ user.image.url }}" alt="" srcset="" height="100px" width="100px"> 
+        <br> 
+       <form action="{% url 'update' user.id  %}" method="post" enctype="multipart/form-data"> 
+           {% csrf_token %}
+          <label for="image">Upload Image:</label>
+            <input type="file" id="image" name="image"  accept="image/*" required>
+             <input type="submit" value="Submit">
+        </form>
+      </td>
+     
+    
+     </tr>
+   {% endfor %}
+
+  </table>
+
+
+  {% endif %}
+
+
+
+
+</div>
+
 </body>
 </html>
