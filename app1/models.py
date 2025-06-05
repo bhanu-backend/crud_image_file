@@ -12,6 +12,11 @@ class AppUser(models.Model):
     email = models.EmailField(max_length=100)
     image = models.ImageField(upload_to="Asset/images")
     category = models.CharField(max_length=32,choices=choices)
+    
 
     def __str__(self):
         return self.name
+    
+class AuthenticateUser(models.Model):
+    user_name = models.CharField(max_length=50,unique=True)
+    passwd = models.CharField(max_length=50)

@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from .models import AppUser
+from .models import AppUser,AuthenticateUser
 from django.http import HttpResponseRedirect
 import os
 def home(request):
@@ -25,3 +25,34 @@ def update_pic(request , id):
       user.image = image
       user.save()
       return HttpResponseRedirect('/')
+
+
+def sign_up(request):
+      if request.method == "POST":
+         user_name = request.POST.get('username')
+         password = request.POST.get('passwd')
+         instance = AuthenticateUser(user_name=user_name,passwd=password)
+         instance.save()
+         return HttpResponseRedirect("/")
+      return render(request,"app1/sign_up.html")
+
+def log_in(request):
+      if request.method == "POST":
+            user_name = request.POST.get('username')
+            password = request.POST.get('passwd')  
+            user = AuthenticateUser.objects.filter(user_name=user_name).values()
+            print(user)
+            if user:
+                  if user[0].get('passwd') == password :
+                         name =user[0].get('user_name')
+                         return render(request,"app1/profile.html",{'user':name})
+                  else :
+                        msg = "password incorrect "
+                        return render(request,"app1/log_in.html",{'msg':msg}) 
+            else:
+               msg = "not a valid user "
+               return render(request,"app1/log_in.html",{'msg':msg})
+
+
+
+      return render(request,"app1/log_in.html")
